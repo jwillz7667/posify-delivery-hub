@@ -59,6 +59,17 @@ const POS = () => {
     0
   );
 
+  // Function to get a neon color based on index
+  const getNeonColor = (index: number) => {
+    const colors = [
+      'bg-[#8B5CF6]', // Vivid Purple
+      'bg-[#D946EF]', // Magenta Pink
+      'bg-[#F97316]', // Bright Orange
+      'bg-[#0EA5E9]', // Ocean Blue
+    ];
+    return colors[index % colors.length];
+  };
+
   return (
     <div className="flex h-full gap-6">
       {/* Menu Section */}
@@ -70,8 +81,8 @@ const POS = () => {
               onClick={() => setSelectedCategory(category)}
               className={`px-4 py-2 rounded-lg ${
                 selectedCategory === category
-                  ? 'bg-primary text-white'
-                  : 'bg-white text-gray-600 hover:bg-gray-50'
+                  ? 'bg-accent text-white'
+                  : 'bg-secondary/50 text-gray-300 hover:bg-secondary'
               }`}
             >
               {category}
@@ -79,46 +90,46 @@ const POS = () => {
           ))}
         </div>
         <div className="grid grid-cols-3 gap-4">
-          {filteredItems.map(item => (
+          {filteredItems.map((item, index) => (
             <button
               key={item.id}
               onClick={() => addToOrder(item)}
-              className="p-4 bg-white rounded-lg shadow hover:shadow-md transition-shadow"
+              className={`${getNeonColor(index)} p-4 rounded-lg shadow-lg hover:opacity-90 transition-all duration-200 text-white`}
             >
               <h3 className="font-medium">{item.name}</h3>
-              <p className="text-accent">${item.price.toFixed(2)}</p>
+              <p className="text-white/90">${item.price.toFixed(2)}</p>
             </button>
           ))}
         </div>
       </div>
 
       {/* Order Section */}
-      <div className="w-96 bg-white rounded-lg p-6 shadow-lg flex flex-col">
+      <div className="w-96 bg-secondary/50 backdrop-blur-sm rounded-lg p-6 shadow-lg flex flex-col">
         <div className="flex items-center space-x-2 mb-6">
-          <ShoppingCart className="text-primary" />
-          <h2 className="text-xl font-semibold">Current Order</h2>
+          <ShoppingCart className="text-accent" />
+          <h2 className="text-xl font-semibold text-white">Current Order</h2>
         </div>
         
         <div className="flex-1 overflow-auto">
           {orderItems.map(item => (
-            <div key={item.id} className="flex items-center justify-between py-2 border-b">
+            <div key={item.id} className="flex items-center justify-between py-2 border-b border-white/10">
               <div>
-                <p className="font-medium">{item.name}</p>
-                <p className="text-sm text-gray-500">
+                <p className="font-medium text-white">{item.name}</p>
+                <p className="text-sm text-white/70">
                   ${(item.price * item.quantity).toFixed(2)}
                 </p>
               </div>
               <div className="flex items-center space-x-2">
                 <button
                   onClick={() => updateQuantity(item.id, -1)}
-                  className="p-1 rounded-full hover:bg-gray-100"
+                  className="p-1 rounded-full hover:bg-accent/20 text-white"
                 >
                   <Minus size={16} />
                 </button>
-                <span className="w-8 text-center">{item.quantity}</span>
+                <span className="w-8 text-center text-white">{item.quantity}</span>
                 <button
                   onClick={() => updateQuantity(item.id, 1)}
-                  className="p-1 rounded-full hover:bg-gray-100"
+                  className="p-1 rounded-full hover:bg-accent/20 text-white"
                 >
                   <Plus size={16} />
                 </button>
@@ -127,10 +138,10 @@ const POS = () => {
           ))}
         </div>
 
-        <div className="mt-4 pt-4 border-t">
+        <div className="mt-4 pt-4 border-t border-white/10">
           <div className="flex justify-between mb-4">
-            <span className="font-semibold">Total</span>
-            <span className="font-semibold">${total.toFixed(2)}</span>
+            <span className="font-semibold text-white">Total</span>
+            <span className="font-semibold text-white">${total.toFixed(2)}</span>
           </div>
           <button className="w-full bg-accent text-white py-3 rounded-lg hover:bg-accent/90 transition-colors">
             Complete Order

@@ -31,8 +31,7 @@ const menuItems: MenuItem[] = [
     price: 9.99,
     category: "Salads",
     description: "Crisp romaine lettuce with parmesan and croutons"
-  },
-  // Add more items as needed
+  }
 ];
 
 const Menu = () => {
@@ -49,15 +48,23 @@ const Menu = () => {
             {menuItems
               .filter(item => item.category === category)
               .map((item) => (
-                <Card key={item.id} className="bg-accent hover:bg-accent/90 transition-colors cursor-pointer group">
+                <Card 
+                  key={item.id} 
+                  className="bg-accent hover:bg-accent/90 transition-colors cursor-pointer group"
+                >
                   <CardContent className="p-4">
                     <div className="flex justify-between items-start">
                       <div>
                         <h3 className="text-lg font-medium text-white">{item.name}</h3>
                         <p className="text-sm text-white/70">{item.description}</p>
-                        <p className="text-lg font-semibold text-white mt-2">${item.price.toFixed(2)}</p>
+                        <p className="text-lg font-semibold text-white mt-2">
+                          ${item.price.toFixed(2)}
+                        </p>
                       </div>
-                      <button className="p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors">
+                      <button 
+                        className="p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors"
+                        onClick={() => console.log('Add item:', item.id)}
+                      >
                         <Plus size={20} />
                       </button>
                     </div>

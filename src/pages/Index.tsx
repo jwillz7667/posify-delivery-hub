@@ -9,21 +9,21 @@ const Index = () => {
       description: 'Process orders and manage transactions',
       icon: ShoppingCart,
       link: '/pos',
-      color: 'bg-accent',
+      color: 'bg-[#8B5CF6]', // Vivid Purple
     },
     {
       title: 'Delivery Dashboard',
       description: 'Track and manage deliveries',
       icon: Truck,
       link: '/delivery',
-      color: 'bg-warning',
+      color: 'bg-[#D946EF]', // Magenta Pink
     },
     {
       title: 'Analytics',
       description: 'View sales and performance metrics',
       icon: BarChart3,
       link: '/analytics',
-      color: 'bg-success',
+      color: 'bg-[#F97316]', // Bright Orange
     },
   ];
 
@@ -41,14 +41,14 @@ const Index = () => {
             to={card.link}
             className="block group"
           >
-            <div className="bg-primary p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow border border-white/10">
-              <div className={`${card.color} w-12 h-12 rounded-lg flex items-center justify-center mb-4`}>
+            <div className={`${card.color} p-6 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 border border-white/10 hover:scale-105`}>
+              <div className="w-12 h-12 rounded-lg flex items-center justify-center mb-4 bg-white/10">
                 <card.icon className="text-white" size={24} />
               </div>
               <h3 className="text-xl font-semibold mb-2 text-white">
                 {card.title}
               </h3>
-              <p className="text-gray-400">
+              <p className="text-white/80">
                 {card.description}
               </p>
             </div>

@@ -1,0 +1,120 @@
+generator client {
+  provider = "prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          Int      @id @default(autoincrement())
+  email       String   @unique
+  password    String
+  role        Role     @default(STAFF)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  pincode     String?  @db.VarChar(60) // Hashed pincode
+  pincodeRequired Boolean @default(false)
+  pincodeExpiresAt DateTime?
+  pincodeLastVerified DateTime?
+
+  orders      Order[]
+  deliveries  Delivery[]
+}
+
+enum Role {
+  ADMIN
+  STAFF
+}
+
+model Product {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String?
+  price       Decimal
+  category    Category
+  inventory   Int      @default(0)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  orders     OrderItem[]
+}
+
+enum Category {
+  APPETIZER
+  MAIN_COURSE
+  DESSERT
+  BEVERAGE
+}
+
+model Order {
+  id          Int      @id @default(autoincrement())
+  total       Decimal
+  status      OrderStatus @default(PENDING)
+  customerName String
+  customerEmail String?
+  customerPhone String
+  coordinates Json     // { lat: number, lng: number }
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  userId     Int?
+  user       User?     @relation(fields: [userId], references: [id])
+  items      OrderItem[]
+  delivery   Delivery?
+}
+
+enum OrderStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  CANCELLED
+}
+
+model OrderItem {
+  id          Int      @id @default(autoincrement())
+  quantity    Int
+  price       Decimal
+  productId   Int
+  orderId     Int
+
+  product    Product @relation(fields: [productId], references: [id])
+  order      Order   @relation(fields: [orderId], references: [id])
+}
+
+model Delivery {
+  id          Int      @id @default(autoincrement())
+  status      DeliveryStatus @default(ASSIGNING)
+  driverName  String
+  estimatedTime Int    // in minutes
+  actualTime  Int?
+  orderId     Int
+  userId     Int?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  order      Order   @relation(fields: [orderId], references: [id])
+  user       User?    @relation(fields: [userId], references: [id])
+}
+
+enum DeliveryStatus {
+  ASSIGNING
+  EN_ROUTE
+  DELIVERED
+  CANCELLED
+}
+
+model Analytics {
+  id          Int      @id @default(autoincrement())
+  type        AnalyticType
+  data        Json
+  createdAt   DateTime @default(now())
+}
+
+enum AnalyticType {
+  DAILY_SALES
+  POPULAR_ITEMS
+  DELIVERY_METRICS
+} 

@@ -1,69 +1,62 @@
-# Welcome to your Lovable project
+# Posify Delivery Hub
 
-## Project info
+A modern POS system with delivery management capabilities.
 
-**URL**: https://lovable.dev/projects/69485888-0fe8-4409-971d-bdb209a17337
+## Features
 
-## How can I edit this code?
+- 🔐 PIN-based authentication system
+- 👥 Multi-role support (Admin, Manager, Staff)
+- 🛍️ Point of Sale interface
+- 🚚 Delivery management
+- 📊 Analytics dashboard
+- ⚡ Real-time updates
 
-There are several ways of editing your application.
+## Tech Stack
 
-**Use Lovable**
+- React + TypeScript
+- Supabase (Database & Authentication)
+- TailwindCSS
+- Vite
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/69485888-0fe8-4409-971d-bdb209a17337) and start prompting.
+## Getting Started
 
-Changes made via Lovable will be committed automatically to this repo.
+1. Clone the repository
+```bash
+git clone [your-repo-url]
+cd posify-delivery-hub
+```
 
-**Use your preferred IDE**
+2. Install dependencies
+```bash
+npm install
+```
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+3. Create a `.env` file in the root directory with your Supabase credentials:
+```env
+VITE_SUPABASE_URL=your_supabase_url
+VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+```
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
+4. Start the development server
+```bash
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+## Default Login PINs
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+- Admin: 1234
+- Manager: 5678
+- Staff 1: 9012
+- Staff 2: 3456
 
-**Use GitHub Codespaces**
+## Contributing
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+1. Create a feature branch
+2. Make your changes
+3. Submit a pull request
 
-## What technologies are used for this project?
+## Security Notes
 
-This project is built with .
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/69485888-0fe8-4409-971d-bdb209a17337) and click on Share -> Publish.
-
-## I want to use a custom domain - is that possible?
-
-We don't support custom domains (yet). If you want to deploy your project under your own domain then we recommend using Netlify. Visit our docs for more details: [Custom domains](https://docs.lovable.dev/tips-tricks/custom-domain/)
+- Change default PINs in production
+- Keep your `.env` file secure and never commit it
+- Regularly rotate PINs for security

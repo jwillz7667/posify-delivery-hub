@@ -19,20 +19,151 @@ const Map = ({ selectedOrder, orders }: MapProps) => {
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<mapboxgl.Map | null>(null);
   const markers = useRef<{ [key: number]: mapboxgl.Marker }>({});
-  const [token, setToken] = useState('');
   const [isMapInitialized, setIsMapInitialized] = useState(false);
+  const token = 'pk.eyJ1IjoiandpbGx6NzY2NyIsImEiOiJjbTZoNXV3Y2QwNW41MmpuMXd4YTdibGp2In0.ENAIEOs8S8zeHOudBzQhCw'; // Added your token
 
   const initializeMap = () => {
-    if (!mapContainer.current || !token) return;
+    if (!mapContainer.current) return;
     
     try {
-      // Initialize map
       mapboxgl.accessToken = token;
       
       map.current = new mapboxgl.Map({
         container: mapContainer.current,
-        style: 'mapbox://styles/mapbox/dark-v11',
-        center: [-74.006, 40.7128], // Default to NYC
+        style: {
+          version: 8,
+          name: 'Modern Theme',
+          sources: {
+            'mapbox-streets': {
+              type: 'vector',
+              url: 'mapbox://mapbox.mapbox-streets-v8'
+            },
+            'mapbox-terrain': {
+              type: 'vector',
+              url: 'mapbox://mapbox.mapbox-terrain-v2'
+            }
+          },
+          layers: [
+            // Background and land coloring
+            {
+              id: 'background',
+              type: 'background',
+              paint: {'background-color': '#f9f9f9'}
+            },
+            {
+              id: 'land',
+              type: 'fill',
+              source: 'mapbox-streets',
+              'source-layer': 'landuse',
+              paint: {
+                'fill-color': '#f0f0f0',
+                'fill-opacity': 0.7
+              }
+            },
+            // Water features
+            {
+              id: 'water',
+              type: 'fill',
+              source: 'mapbox-streets',
+              'source-layer': 'water',
+              paint: {
+                'fill-color': '#aad3df'
+              }
+            },
+            // Parks and green areas
+            {
+              id: 'parks',
+              type: 'fill',
+              source: 'mapbox-streets',
+              'source-layer': 'landuse',
+              filter: ['==', 'class', 'park'],
+              paint: {
+                'fill-color': '#d8e8d8'
+              }
+            },
+            // Buildings
+            {
+              id: 'buildings',
+              type: 'fill',
+              source: 'mapbox-streets',
+              'source-layer': 'building',
+              paint: {
+                'fill-color': '#e0d8c8',
+                'fill-opacity': 0.6
+              }
+            },
+            // Road system
+            {
+              id: 'roads',
+              type: 'line',
+              source: 'mapbox-streets',
+              'source-layer': 'road',
+              paint: {
+                'line-color': [
+                  'match',
+                  ['get', 'class'],
+                  'motorway', '#ff9a6b',  // Orange for highways
+                  'primary', '#7b9dd2',   // Blue for main roads
+                  'secondary', '#a4c0e8', // Lighter blue
+                  'street', '#d1d1d1',    // Light gray for streets
+                  'path', '#e0e0e0',      // Very light gray for paths
+                  '#cccccc'               // Default
+                ],
+                'line-width': [
+                  'interpolate', ['linear'], ['zoom'],
+                  10, ['match', ['get', 'class'],
+                    'motorway', 3,
+                    'primary', 2.5,
+                    'secondary', 2,
+                    1
+                  ],
+                  16, ['match', ['get', 'class'],
+                    'motorway', 6,
+                    'primary', 5,
+                    'secondary', 4,
+                    'street', 3,
+                    2
+                  ]
+                ]
+              }
+            },
+            // Labels and points of interest
+            {
+              id: 'poi-labels',
+              type: 'symbol',
+              source: 'mapbox-streets',
+              'source-layer': 'poi_label',
+              layout: {
+                'text-field': ['get', 'name_en'],
+                'text-font': ['Noto Sans Regular'],
+                'text-size': 12
+              },
+              paint: {
+                'text-color': '#5a5a5a',
+                'text-halo-color': '#ffffff',
+                'text-halo-width': 1
+              }
+            },
+            // Road labels
+            {
+              id: 'road-labels',
+              type: 'symbol',
+              source: 'mapbox-streets',
+              'source-layer': 'road_label',
+              layout: {
+                'text-field': ['get', 'name_en'],
+                'text-font': ['Noto Sans Bold'],
+                'text-size': 12
+              },
+              paint: {
+                'text-color': '#4a4a4a',
+                'text-halo-color': '#ffffff',
+                'text-halo-width': 1
+              }
+            }
+          ]
+        },
+        center: [-74.006, 40.7128],
         zoom: 12
       });
 
@@ -45,7 +176,7 @@ const Map = ({ selectedOrder, orders }: MapProps) => {
       // Add markers for all orders
       orders.forEach((order) => {
         const marker = new mapboxgl.Marker({
-          color: '#8B5CF6'
+          color: '#004E89'
         })
           .setLngLat(order.coordinates)
           .setPopup(
@@ -69,13 +200,13 @@ const Map = ({ selectedOrder, orders }: MapProps) => {
 
     // Reset all markers to default color
     Object.values(markers.current).forEach(marker => {
-      marker.getElement().style.color = '#8B5CF6';
+      marker.getElement().style.color = '#004E89';
     });
 
     // Highlight selected marker
     const selectedMarker = markers.current[selectedOrder.id];
     if (selectedMarker) {
-      selectedMarker.getElement().style.color = '#F97316';
+      selectedMarker.getElement().style.color = '#FF6B35';
       
       // Fly to selected order
       map.current.flyTo({
@@ -86,37 +217,15 @@ const Map = ({ selectedOrder, orders }: MapProps) => {
     }
   }, [selectedOrder, isMapInitialized]);
 
-  // Cleanup
+  // Initialize map on mount
   useEffect(() => {
+    initializeMap();
     return () => {
       if (map.current) {
         map.current.remove();
       }
     };
   }, []);
-
-  if (!isMapInitialized) {
-    return (
-      <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 bg-background/80 backdrop-blur-sm rounded-lg p-6">
-        <h3 className="text-lg font-semibold">Enter your Mapbox token to initialize the map</h3>
-        <p className="text-sm text-muted-foreground">
-          Get your token from <a href="https://www.mapbox.com" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">mapbox.com</a>
-        </p>
-        <div className="flex gap-2 w-full max-w-md">
-          <Input
-            type="text"
-            value={token}
-            onChange={(e) => setToken(e.target.value)}
-            placeholder="pk.eyJ1..."
-            className="flex-1"
-          />
-          <Button onClick={initializeMap} disabled={!token}>
-            Initialize Map
-          </Button>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="absolute inset-0 rounded-lg overflow-hidden">

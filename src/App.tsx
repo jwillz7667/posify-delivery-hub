@@ -11,6 +11,9 @@ import Analytics from "./pages/Analytics";
 import Settings from "./pages/Settings";
 import Menu from "./pages/Menu";
 import Delivery from "./pages/Delivery";
+import PincodeVerification from "./pages/PincodeVerification.tsx";
+import RequireAuth from "./components/RequireAuth";
+import Login from "./pages/Login";
 
 const queryClient = new QueryClient();
 
@@ -20,17 +23,46 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <MainLayout>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/pos" element={<POS />} />
-            <Route path="/menu" element={<Menu />} />
-            <Route path="/delivery" element={<Delivery />} />
-            <Route path="/analytics" element={<Analytics />} />
-            <Route path="/settings" element={<Settings />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </MainLayout>
+        <Routes>
+          {/* Auth Pages - No Layout */}
+          <Route path="/login" element={<Login />} />
+          <Route path="/verify-pincode" element={<PincodeVerification />} />
+          <Route path="*" element={<NotFound />} />
+
+          {/* Protected Routes - With Layout */}
+          <Route element={<MainLayout />}>
+            <Route path="/" element={
+              <RequireAuth>
+                <Index />
+              </RequireAuth>
+            } />
+            <Route path="/pos" element={
+              <RequireAuth>
+                <POS />
+              </RequireAuth>
+            } />
+            <Route path="/menu" element={
+              <RequireAuth>
+                <Menu />
+              </RequireAuth>
+            } />
+            <Route path="/delivery" element={
+              <RequireAuth>
+                <Delivery />
+              </RequireAuth>
+            } />
+            <Route path="/analytics" element={
+              <RequireAuth>
+                <Analytics />
+              </RequireAuth>
+            } />
+            <Route path="/settings" element={
+              <RequireAuth>
+                <Settings />
+              </RequireAuth>
+            } />
+          </Route>
+        </Routes>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>

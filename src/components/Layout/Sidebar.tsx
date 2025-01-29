@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { 
   ShoppingCart, 
@@ -6,11 +6,14 @@ import {
   Menu as MenuIcon, 
   BarChart3, 
   Settings,
-  Home
+  Home,
+  ChevronLeft,
+  ChevronRight
 } from 'lucide-react';
 
 const Sidebar = () => {
   const location = useLocation();
+  const [isCollapsed, setIsCollapsed] = useState(false);
 
   const menuItems = [
     { icon: Home, label: 'Dashboard', path: '/' },
@@ -22,9 +25,23 @@ const Sidebar = () => {
   ];
 
   return (
-    <div className="h-screen w-64 bg-primary p-4 flex flex-col">
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-white">POS System</h1>
+    <div 
+      className={`h-screen bg-primary p-4 flex flex-col transition-all duration-300 ${
+        isCollapsed ? 'w-20' : 'w-64'
+      }`}
+    >
+      <div className="mb-8 flex items-center justify-between">
+        <h1 className={`text-2xl font-bold text-white transition-opacity duration-300 ${
+          isCollapsed ? 'opacity-0 w-0' : 'opacity-100'
+        }`}>
+          POS System
+        </h1>
+        <button
+          onClick={() => setIsCollapsed(!isCollapsed)}
+          className="text-white/70 hover:text-white p-2 rounded-lg hover:bg-white/5"
+        >
+          {isCollapsed ? <ChevronRight size={20} /> : <ChevronLeft size={20} />}
+        </button>
       </div>
       <nav className="flex-1">
         <ul className="space-y-2">
@@ -41,7 +58,11 @@ const Sidebar = () => {
                   }`}
                 >
                   <item.icon size={20} />
-                  <span>{item.label}</span>
+                  <span className={`transition-opacity duration-300 ${
+                    isCollapsed ? 'opacity-0 w-0' : 'opacity-100'
+                  }`}>
+                    {item.label}
+                  </span>
                 </Link>
               </li>
             );

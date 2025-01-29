@@ -27,7 +27,7 @@ const Sidebar = () => {
   return (
     <div 
       className={`h-screen bg-primary p-4 flex flex-col transition-all duration-300 ${
-        isCollapsed ? 'w-20' : 'w-64'
+        isCollapsed ? 'w-24' : 'w-64'
       }`}
     >
       <div className="mb-8 flex items-center justify-between">
@@ -38,13 +38,13 @@ const Sidebar = () => {
         </h1>
         <button
           onClick={() => setIsCollapsed(!isCollapsed)}
-          className="text-white/70 hover:text-white p-2 rounded-lg hover:bg-white/5"
+          className="text-white/70 hover:text-white p-2 rounded-lg hover:bg-accent/20"
         >
-          {isCollapsed ? <ChevronRight size={20} /> : <ChevronLeft size={20} />}
+          {isCollapsed ? <ChevronRight size={24} /> : <ChevronLeft size={24} />}
         </button>
       </div>
       <nav className="flex-1">
-        <ul className="space-y-2">
+        <ul className="space-y-3">
           {menuItems.map((item) => {
             const isActive = location.pathname === item.path;
             return (
@@ -53,11 +53,11 @@ const Sidebar = () => {
                   to={item.path}
                   className={`flex items-center space-x-3 p-3 rounded-lg transition-colors ${
                     isActive
-                      ? 'bg-white/10 text-white'
-                      : 'text-white/70 hover:bg-white/5 hover:text-white'
-                  }`}
+                      ? 'bg-accent text-white'
+                      : 'text-white/70 hover:bg-accent/20 hover:text-white'
+                  } ${isCollapsed ? 'justify-center' : ''}`}
                 >
-                  <item.icon size={20} />
+                  <item.icon size={28} />
                   <span className={`transition-opacity duration-300 ${
                     isCollapsed ? 'opacity-0 w-0' : 'opacity-100'
                   }`}>
